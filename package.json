@@ -1,6 +1,6 @@
 {
-  "name": "apollo-datasource-http",
-  "version": "0.20.0",
+  "name": "@cvent/apollo-datasource-http",
+  "version": "0.20.1",
   "author": "Dustin Deus <deusdustin@gmail.com>",
   "license": "MIT",
   "repository": {

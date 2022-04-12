@@ -1131,6 +1131,7 @@ test('Should cache a GET response and respond with the result on subsequent call
         requestCache: {
           maxTtl: 10,
           maxTtlIfError: 20,
+          stringify: true,
         },
       })
     }
@@ -1177,6 +1178,7 @@ test('Should cache a GET response and respond with the result on subsequent call
         requestCache: {
           maxTtl: 10,
           maxTtlIfError: 20,
+          stringify: true,
         },
       })
     }
@@ -1248,6 +1250,7 @@ test('Should respond with stale-if-error cache on origin error', async (t) => {
         requestCache: {
           maxTtl: 10,
           maxTtlIfError: 20,
+          stringify: true,
         },
       })
     }
@@ -1293,6 +1296,7 @@ test('Should respond with stale-if-error cache on origin error', async (t) => {
         requestCache: {
           maxTtl: 10,
           maxTtlIfError: 20,
+          stringify: true,
         },
       })
     }
@@ -1342,6 +1346,7 @@ test('Should not cache POST requests by default', async (t) => {
         requestCache: {
           maxTtl: 10,
           maxTtlIfError: 20,
+          stringify: true,
         },
       })
     }
@@ -1412,6 +1417,7 @@ test('Should only cache GET successful responses with the correct status code', 
         requestCache: {
           maxTtl: 10,
           maxTtlIfError: 20,
+          stringify: true,
         },
       })
     }
@@ -1516,6 +1522,7 @@ test('Should cache POST successful responses if isRequestCacheable allows to do 
         requestCache: {
           maxTtl: 10,
           maxTtlIfError: 20,
+          stringify: true,
         },
       })
     }
@@ -1625,6 +1632,7 @@ test('Response is not cached due to origin error', async (t) => {
         requestCache: {
           maxTtl: 10,
           maxTtlIfError: 20,
+          stringify: true,
         },
       })
     }

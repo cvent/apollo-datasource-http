@@ -30,6 +30,8 @@ export type CacheTTLOptions = {
     maxTtl: number
     // The maximum time the cache should be used when the re-fetch from the origin fails.
     maxTtlIfError: number
+    // Whether or not response should be stringified before caching
+    stringify: boolean
   }
 }
 
@@ -87,7 +89,7 @@ export abstract class HTTPDataSource<TContext = any> extends DataSource {
   public context!: TContext
   private pool: Pool
   private logger?: Logger
-  private cache!: KeyValueCache<string>
+  private cache!: KeyValueCache<string | Record<string, unknown>>
   private globalRequestOptions?: RequestOptions
   private readonly memoizedResults: QuickLRU<string, Response<any>>
 
@@ -346,7 +348,7 @@ export abstract class HTTPDataSource<TContext = any> extends DataSource {
       // let's see if we can fill the shared cache
       if (request.requestCache && this.isResponseCacheable<TResult>(request, response)) {
         response.maxTtl = request.requestCache.maxTtl
-        const cachedResponse = JSON.stringify(response)
+        const cachedResponse = request.requestCache.stringify ? JSON.stringify(response) : response
 
         // respond with the result immediately without waiting for the cache
         this.cache
@@ -369,7 +371,10 @@ export abstract class HTTPDataSource<TContext = any> extends DataSource {
         const cacheItem = await this.cache.get(`staleIfError:${cacheKey}`)
 
         if (cacheItem) {
-          const response: Response<TResult> = JSON.parse(cacheItem)
+          const response: Response<TResult> =
+            request.requestCache.stringify && typeof cacheItem === 'string'
+              ? JSON.parse(cacheItem)
+              : cacheItem
           response.isFromCache = true
           return response
         }
@@ -419,7 +424,10 @@ export abstract class HTTPDataSource<TContext = any> extends DataSource {
         try {
           const cacheItem = await this.cache.get(cacheKey)
           if (cacheItem) {
-            const cachedResponse: Response<TResult> = JSON.parse(cacheItem)
+            const cachedResponse: Response<TResult> =
+              request.requestCache.stringify && typeof cacheItem === 'string'
+                ? JSON.parse(cacheItem)
+                : cacheItem
             cachedResponse.memoized = false
             cachedResponse.isFromCache = true
             return cachedResponse
