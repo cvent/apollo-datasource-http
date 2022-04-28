@@ -348,7 +348,9 @@ export abstract class HTTPDataSource<TContext = any> extends DataSource {
       // let's see if we can fill the shared cache
       if (request.requestCache && this.isResponseCacheable<TResult>(request, response)) {
         response.maxTtl = request.requestCache.maxTtl
-        const cachedResponse = request.requestCache.stringify ? JSON.stringify(response) : Object.freeze(response)
+        const cachedResponse = request.requestCache.stringify
+          ? JSON.stringify(response)
+          : {...response, body: response.body && Object.freeze(response.body)}
 
         // respond with the result immediately without waiting for the cache
         this.cache
